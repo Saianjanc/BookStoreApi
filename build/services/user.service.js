@@ -4,10 +4,11 @@ var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefau
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.updateUser = exports.newUser = exports.getUser = exports.getAllUsers = exports.deleteUser = void 0;
+exports.userLogin = exports.getAllUsers = exports.createUser = void 0;
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 var _user = _interopRequireDefault(require("../models/user.model"));
+var _bcrypt = _interopRequireDefault(require("bcrypt"));
 //get all users
 var getAllUsers = exports.getAllUsers = /*#__PURE__*/function () {
   var _ref = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
@@ -32,95 +33,115 @@ var getAllUsers = exports.getAllUsers = /*#__PURE__*/function () {
 }();
 
 //create new user
-var newUser = exports.newUser = /*#__PURE__*/function () {
+var createUser = exports.createUser = /*#__PURE__*/function () {
   var _ref2 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(body) {
-    var data;
+    var email, password, phone, userCheck, salt, hash, data, err, _err, _err2;
     return _regenerator["default"].wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
-          _context2.next = 2;
+          email = body.email;
+          password = body.password;
+          phone = body.mobile;
+          _context2.next = 5;
+          return _user["default"].findOne({
+            email: email
+          });
+        case 5:
+          userCheck = _context2.sent;
+          if (userCheck) {
+            _context2.next = 32;
+            break;
+          }
+          salt = 10;
+          hash = _bcrypt["default"].hashSync(body.password, salt);
+          body.password = hash;
+          if (!(password.length >= 8 && phone.length >= 10)) {
+            _context2.next = 18;
+            break;
+          }
+          _context2.next = 13;
           return _user["default"].create(body);
-        case 2:
+        case 13:
           data = _context2.sent;
+          console.log("goood");
           return _context2.abrupt("return", data);
-        case 4:
+        case 18:
+          if (!(password.length < 8)) {
+            _context2.next = 25;
+            break;
+          }
+          err = {};
+          err.msg = "Password is too small!";
+          err.param = "password";
+          throw err;
+        case 25:
+          if (!(phone.length < 10)) {
+            _context2.next = 30;
+            break;
+          }
+          _err = {};
+          _err.msg = "Enter a valid Mobile Number!";
+          _err.param = "phone";
+          throw _err;
+        case 30:
+          _context2.next = 36;
+          break;
+        case 32:
+          _err2 = {};
+          _err2.msg = "User Email Already Exists!";
+          _err2.param = "email";
+          throw _err2;
+        case 36:
         case "end":
           return _context2.stop();
       }
     }, _callee2);
   }));
-  return function newUser(_x) {
+  return function createUser(_x) {
     return _ref2.apply(this, arguments);
   };
 }();
-
-//update single user
-var updateUser = exports.updateUser = /*#__PURE__*/function () {
-  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(_id, body) {
-    var data;
+var userLogin = exports.userLogin = /*#__PURE__*/function () {
+  var _ref3 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(email, password) {
+    var data, err, _err3;
     return _regenerator["default"].wrap(function _callee3$(_context3) {
       while (1) switch (_context3.prev = _context3.next) {
         case 0:
           _context3.next = 2;
-          return _user["default"].findByIdAndUpdate({
-            _id: _id
-          }, body, {
-            "new": true
+          return _user["default"].findOne({
+            email: email
           });
         case 2:
           data = _context3.sent;
+          if (!(data != null)) {
+            _context3.next = 14;
+            break;
+          }
+          if (!_bcrypt["default"].compareSync(password, data.password)) {
+            _context3.next = 8;
+            break;
+          }
           return _context3.abrupt("return", data);
-        case 4:
+        case 8:
+          err = {};
+          err.msg = "Password does not Match!";
+          err.param = "password";
+          throw err;
+        case 12:
+          _context3.next = 18;
+          break;
+        case 14:
+          _err3 = {};
+          _err3.msg = "Email does not Exists!";
+          _err3.param = "email";
+          throw _err3;
+        case 18:
         case "end":
           return _context3.stop();
       }
     }, _callee3);
   }));
-  return function updateUser(_x2, _x3) {
+  return function userLogin(_x2, _x3) {
     return _ref3.apply(this, arguments);
-  };
-}();
-
-//delete single user
-var deleteUser = exports.deleteUser = /*#__PURE__*/function () {
-  var _ref4 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee4(id) {
-    return _regenerator["default"].wrap(function _callee4$(_context4) {
-      while (1) switch (_context4.prev = _context4.next) {
-        case 0:
-          _context4.next = 2;
-          return _user["default"].findByIdAndDelete(id);
-        case 2:
-          return _context4.abrupt("return", '');
-        case 3:
-        case "end":
-          return _context4.stop();
-      }
-    }, _callee4);
-  }));
-  return function deleteUser(_x4) {
-    return _ref4.apply(this, arguments);
-  };
-}();
-
-//get single user
-var getUser = exports.getUser = /*#__PURE__*/function () {
-  var _ref5 = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee5(id) {
-    var data;
-    return _regenerator["default"].wrap(function _callee5$(_context5) {
-      while (1) switch (_context5.prev = _context5.next) {
-        case 0:
-          _context5.next = 2;
-          return _user["default"].findById(id);
-        case 2:
-          data = _context5.sent;
-          return _context5.abrupt("return", data);
-        case 4:
-        case "end":
-          return _context5.stop();
-      }
-    }, _callee5);
-  }));
-  return function getUser(_x5) {
-    return _ref5.apply(this, arguments);
   };
 }();
