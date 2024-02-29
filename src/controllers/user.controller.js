@@ -18,11 +18,14 @@ export const getAllUsers = async (req, res, next) => {
 export const createUser = async (req, res, next) => {
   try {
       const data = await UserService.createUser(req.body);
-      res.status(HttpStatus.CREATED).json({
+      jwt.sign({data},process.env.ACCESS_TOKEN,(err,token)=>{
+        res.status(HttpStatus.CREATED).json({
       code: HttpStatus.CREATED,
       data: data,
-      message: 'User Created Successfully!'
+      message: 'User Created Successfully!',
+      token: token
     });
+   })
   } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
       code: HttpStatus.BAD_REQUEST,
