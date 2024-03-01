@@ -1,4 +1,4 @@
-import {book,cart} from '../models/book.model';
+import {book,cart,wishlist} from '../models/book.model';
 
 //get all books
 export const getAllBooks = async () => {
@@ -29,7 +29,6 @@ export const getCartItems = async (id) => {
 export const removeCartItem = async (userId,id) => {
   const chk = await cart.findById(userId)
   if(chk){
-    // const data = await cart.updateOne({_id:id},{$pull:{cartItems:book.cartItems}});
     const newCart = await chk.cartItems.filter((book)=>book._id!=id)
     const data = await cart.updateOne({_id:userId},{cartItems:newCart})
     return data;
@@ -39,4 +38,33 @@ export const removeCartItem = async (userId,id) => {
 export const updateCartItem = async (id,body) => {
   const data = await cart.findByIdAndUpdate(id,body);
   return data;
+};
+
+//add book to wishlist
+export const addToWishlist = async (book) => {
+  const chk = await wishlist.findById(book._id)
+  if(chk==null){
+  const data = await wishlist.create(book);
+  return data;
+  }else{
+    const data = await wishlist.updateOne({_id:book._id},{$push:{wishList:book.wishList}});
+    return data;
+  }
+};
+
+export const getWishlistItems = async (id) => {
+  const data = await wishlist.findById(id);
+  if(data)
+  return data;
+  else
+  return {wishList:[]};
+};
+
+export const removeWishItem = async (userId,id) => {
+  const chk = await wishlist.findById(userId)
+  if(chk){
+    const newWishList = await chk.wishList.filter((book)=>book._id!=id)
+    const data = await wishlist.updateOne({_id:userId},{wishList:newWishList})
+    return data;
+    }
 };

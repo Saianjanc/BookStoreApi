@@ -65,3 +65,42 @@ export const updateCart = async (req, res, next) => {
     next(error);
   }
 };
+
+export const addWishlist = async (req, res, next) => {
+  try {
+    const data = await BookService.addToWishlist(req.body);
+    res.status(HttpStatus.OK).json({
+      code: HttpStatus.OK,
+      data: data,
+      message: 'Book successfully Added to WishList'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getWishlist = async (req, res, next) => {
+  try {
+    const data = await BookService.getWishlistItems(req.headers.userid);
+    res.status(HttpStatus.OK).json({
+      code: HttpStatus.OK,
+      data: data,
+      message: 'All wishlist items fetched'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const removeWishlist = async (req, res, next) => {
+  try {
+    const data = await BookService.removeWishItem(req.headers.userid,req.params._id);
+    res.status(HttpStatus.OK).json({
+      code: HttpStatus.OK,
+      data: data,
+      message: 'Book successfully removed from Wishlist'
+    });
+  } catch (error) {
+    next(error);
+  }
+};

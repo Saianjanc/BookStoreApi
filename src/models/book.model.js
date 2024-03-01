@@ -72,5 +72,46 @@ const cartSchema = new Schema(
   }
 );
 
+const wishlistSchema = new Schema(
+  {
+    _id: {
+      type: String
+    },
+    wishList: [{
+      bookName: {
+        type: String
+      },
+      bookImage: {
+        type: String
+      },
+      author: {
+        type: String
+      },
+      quantity: {
+        type: String
+      },
+      price: {
+        type: String
+      },
+      discountPrice: {
+        type: String
+      },
+      description: {
+        type: String
+      },
+      _id: {
+        type: String
+      },
+      quantityToBuy: {
+        type: Number
+      }
+    }]
+  },
+  {
+    timestamps: true
+  }
+);
+
 export const book = model('Book', bookSchema);
 export const cart = model('Cart', cartSchema);
+export const wishlist = model('Wishlist', wishlistSchema);
