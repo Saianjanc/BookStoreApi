@@ -104,3 +104,16 @@ export const removeWishlist = async (req, res, next) => {
     next(error);
   }
 };
+
+export const addFeedback = async (req, res, next) => {
+  try {
+    const data = await BookService.addNewFeedback(req.params._id,req.body);
+    res.status(HttpStatus.OK).json({
+      code: HttpStatus.OK,
+      data: data,
+      message: 'Feedback Submitted Successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};

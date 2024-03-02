@@ -11,5 +11,6 @@ router.put('/:_id', bookController.updateCart);
 router.post('/addToWishlist', bookController.addWishlist);
 router.get('/getwishlist', bookController.getWishlist);
 router.delete('/removewishlist/:_id', bookController.removeWishlist);
+router.post('/addfeedback/:_id', bookController.addFeedback);
 
 export default router;

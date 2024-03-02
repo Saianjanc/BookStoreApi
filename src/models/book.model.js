@@ -23,9 +23,7 @@ const bookSchema = new Schema(
     description: {
       type: String
     },
-    _id: {
-      type: String
-    }
+    feedback:[{fullName: {type: String},comment: {type: String},rating: {type: Number}}]
   },
   {
     timestamps: true

@@ -68,3 +68,12 @@ export const removeWishItem = async (userId,id) => {
     return data;
     }
 };
+
+export const addNewFeedback = async (_id,body) => {
+  const chk = await book.findById(_id)
+  if(chk){
+    await chk.feedback.push(body)
+    const data = await book.updateOne({_id:_id},{feedback:chk.feedback})
+    return data;
+  }
+};
