@@ -58,3 +58,12 @@ export const userLogin = async (email,password) => {
     throw err;
   }
 };
+
+export const addNewAddress = async (_id,body) => {
+  const chk = await User.findById(_id)
+  if(chk){
+    await chk.address.push(body)
+    const data = await User.updateOne({_id:_id},{address:chk.address})
+    return data;
+  }
+};
